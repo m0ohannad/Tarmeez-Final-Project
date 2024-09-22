@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarmeez Final Project</title>
+    <link rel="shortcut icon" href="#">
 
     <!-- IMPORT SCRIPTS & STYLES -->
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -19,6 +20,23 @@
         .card {
             margin-bottom: 10px;
         }
+
+        /* 
+        #add-btn {
+            position: fixed;
+            bottom: 5%;
+            right: 7%;
+            height: 70px;
+            width: 70px;
+            font-size: 50px;
+            color: white;
+            line-height: 0;
+            border-radius: 100px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.3);
+        }
+        */
     </style>
 </head>
 
@@ -58,11 +76,99 @@
     </div>
     <!--// LOGIN MODAL //-->
 
-    <!-- ====== ALERT ====== -->
-    <div id="success-alert"></div>
-    <!--// ====== ALERT ====== //-->
+    <!-- REGISTER MODAL -->
+    <div class="modal fade" id="register-modal" tabindex="-1" aria-labelledby="register-modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="register-modalLabel">Register A New User</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Profile image:</label>
+                            <div class="input-group mb-3">
+                                <input type="file" class="form-control" id="inputGroupFile02">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">Name:</label>
+                            <div class="input-group mb-3">
+                                <!-- <span class="input-group-text" id="basic-addon1">@</span> -->
+                                <input type="text" class="form-control" id="register-name-input" placeholder="Username"
+                                    aria-label="Username" aria-describedby="basic-addon1" value="Mohannad1">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">username:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">@</span>
+                                <input type="text" class="form-control" id="register-username-input"
+                                    placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"
+                                    value="Mohannad1">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Password:</label>
+                            <input type="password" class="form-control" id="register-password-input" value="123456">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="registerBtnClicked()">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--// REGISTER MODAL //-->
+
+    <!-- CREATE POSTS MODAL -->
+    <!-- <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="login-modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="login-modalLabel">Login</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="recipient-name" class="col-form-label">username:</label>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">@</span>
+                                <input type="text" class="form-control" id="username-input" placeholder="Username"
+                                    aria-label="Username" aria-describedby="basic-addon1" value="Mohannad1">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Password:</label>
+                            <input type="password" class="form-control" id="Password-input" value="123456">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="loginBtnClicked()">Login</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!--// CREATE POSTS MODAL //-->
 
     <!--//===== MODALS =====//-->
+
+    <!-- ADD POST BUTTON -->
+    <!-- <div class="bg-primary" id="add-btn" data-bs-toggle="modal" data-bs-target="#create-post-modal">
+        +
+    </div> -->
+    <!--// ADD POST BUTTON //-->
+
+    <!-- ====== ALERT ====== -->
+    <div id="success-alert" class="show fade" style="position: fixed; z-index: 99999; width: 30%; bottom: 0; right: 0;">
+    </div>
+    <!--// ====== ALERT ====== //-->
 
     <!-- NAVIGATION BAR CONT -->
     <div class="container">
@@ -90,8 +196,8 @@
                             <div class="d-flex w-100 justify-content-end" id="logged-in-div">
                                 <button id="login-btn" type="button" data-bs-toggle="modal"
                                     data-bs-target="#login-modal" class="btn btn-outline-success me-2">Login</button>
-                                <button id="register-btn" type="button"
-                                    class="btn btn-outline-success">Register</button>
+                                <button id="register-btn" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#register-modal" class="btn btn-outline-success">Register</button>
                             </div>
                             <!--// FROM NON-LOGGED IN User //-->
 
@@ -152,6 +258,15 @@
                                 </svg>
                                 <span>
                                     (3) Comments
+
+                                    <span id="post-tag"></span>
+                                    <button class="btn btn-sm rounded-5" style="background-color: gray; color: white">
+                                        Tag1
+                                    </button>
+                                    <button class="btn btn-sm rounded-5" style="background-color: gray; color: white">
+                                        Tag2
+                                    </button>
+                                </span>
                                 </span>
                             </div>
                         </div>
@@ -181,54 +296,77 @@
             // document.getElementById("posts").innerHTML = "";
 
             for (post of posts) {
-                // console.log(post);
 
                 const author = post.author;
-                // console.log(author);
+
+                let tagsContent = `
+                <button class="btn btn-sm rounded-5" style="background-color: gray; cursor: auto;">
+                    Doesn't have tags
+                </button>`;
+
+                // post.tags = ["tag1", "tag2", "tag3"];
+
+                if (post.tags && post.tags.length > 0) {
+                    tagsContent = "";
+                    post.tags.forEach(tag => {
+                        tagsContent += `
+                <button class="btn btn-sm rounded-5" style="background-color: gray; color: white">
+                    ${tag}
+                </button>
+                `;
+                    });
+                }
+
                 let content = `
-            <!-- POST -->
-            <div class="d-flex justify-content-center mt-5">
-                <div class="col-9">
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <img src="${author.profile_image ? author.profile_image : './pofile-pics/picture-profile-icon-male.jpg'}${author.profile_image}" alt="picture of ${author.username} profile"
-                                class="img-thumbnail rounded-circle border-1" style="height: 40px; width: 40px;"
-                                onerror="this.onerror=null; this.src='./pofile-pics/picture-profile-icon-male.jpg';">
-                            <b>@${author.username}</b>
-                        </div>
-                        <div class="card-body">
-                            <img src="${post.image ? post.image : './placeholders/Green-Tree.jpeg'}" alt="Image of post ${post.title ? 'titled \'' + post.title + '\'' : ""}" class="w-100">
+                <!-- POST -->
+                <div class="d-flex justify-content-center mt-5">
+                    <div class="col-9">
+                        <div class="card shadow">
+                            <div class="card-header">
+                                <img src="${author.profile_image ? author.profile_image : './pofile-pics/picture-profile-icon-male.jpg'}" alt="picture of ${author.username} profile"
+                                    class="img-thumbnail rounded-circle border-1" style="height: 40px; width: 40px;"
+                                    onerror="this.onerror=null; this.src='./pofile-pics/picture-profile-icon-male.jpg';">
+                                <b>@${author.username}</b>
+                            </div>
+                            <div class="card-body">
+                                <img src="${post.image ? post.image : './placeholders/Green-Tree.jpeg'}" alt="Image of post ${post.title ? 'titled \'' + post.title + '\'' : ""}" class="w-100">
 
-                            <h6 style="color: rgb(193, 193, 193);" class="mt-1">
-                                ${post.created_at}
-                            </h6>
+                                <h6 style="color: rgb(193, 193, 193);" class="mt-1">
+                                    ${post.created_at}
+                                </h6>
 
-                            <h5>
-                                ${post.title ? post.title : "Post Title"}
-                            </h5>
+                                <h5>
+                                    ${post.title ? post.title : "Post Title"}
+                                </h5>
 
-                            <p>
-                            ${post.body ? post.body : "Post body"}
-                            </p>
+                                <p>
+                                ${post.body ? post.body : "Post body"}
+                                </p>
 
-                            <hr>
+                                <hr>
 
-                            <div>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
-                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
-                                  </svg>
-                                <span>
-                                (${post.comments_count}) Comments
-                                </span>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                        <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+                                    </svg>
+                                    <span>
+                                    (${post.comments_count}) Comments
+
+                                        <span">
+                                            ${tagsContent}
+                                        </span>
+                                    </span>
+
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!--// POST //-->
-            `;
+                <!--// POST //-->
+                `;
 
                 document.getElementById("posts").innerHTML += content;
+
             }
         })
 
@@ -260,7 +398,8 @@
                 const loginModalInstance = bootstrap.Modal.getInstance(loginModal);
                 loginModalInstance.hide();
 
-                alert("Login successful");
+                // alert("Login successful");
+                showAlert("Logged in successfully");
 
                 setupUI();
             })
@@ -268,17 +407,59 @@
 
     }
 
+    function registerBtnClicked() {
+        // console.log("Register button clicked");
+        const name = document.getElementById("register-name-input").value;
+        const username = document.getElementById("register-username-input").value;
+        const password = document.getElementById("register-password-input").value;
+
+        console.log("name: " + name);
+        console.log("username: " + username);
+        console.log("password: " + password);
+
+        const params = {
+            "username": username,
+            "password": password,
+            "name": name
+        }
+
+        const url = `${baseUrl}/register`;
+
+        axios.post(url, params)
+            .then((response) => {
+                // const data = response.data;
+                // console.log(response.data.token);
+
+                localStorage.setItem("token", response.data.token);
+                localStorage.setItem("user", JSON.stringify(response.data.user));
+
+                // document.getElementById("register-modal").style.display = "none";
+                const registerModal = document.getElementById("register-modal");
+                const registerModalInstance = bootstrap.Modal.getInstance(registerModal);
+                registerModalInstance.hide();
+
+                // alert("Register successful");
+                showAlert("New User Registered Successfully");
+
+                setupUI();
+            }).catch((error) => {
+                const errMessage = error.response.data.message
+                console.log(errMessage);
+                showAlert(errMessage, 'danger');
+            })
+    }
+
     function logout() {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
 
-        alert("Logged out successfully");
+        showAlert("Logged out successfully");
         setupUI();
     }
 
     // showSuccessAlert();
 
-    function showSuccessAlert() {
+    function showAlert(cusomMessage, msgType = 'success') {
         const alertPlaceholder = document.getElementById('success-alert')
 
         const appendAlert = (message, type) => {
@@ -293,7 +474,16 @@
             alertPlaceholder.append(wrapper)
         }
 
-        // appendAlert('Nice, you triggered this alert message!', 'success')
+        appendAlert(cusomMessage, msgType)
+
+        // todo: hide alert after 3 seconds
+        setTimeout(() => {
+            const alert = document.getElementById("success-alert");
+            const alertInstance = bootstrap.Alert.getInstance(alert);
+            alertInstance.hide();
+            // const alert = bootstrap.Alert.getOrCreateInstance('#success-alert')
+            // alert.close()
+        }, 3000)
 
         // const alertTrigger = document.getElementById('liveAlertBtn')
         // if (alertTrigger) {
