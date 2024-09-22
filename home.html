@@ -21,7 +21,7 @@
             margin-bottom: 10px;
         }
 
-        /* 
+
         #add-btn {
             position: fixed;
             bottom: 5%;
@@ -30,13 +30,12 @@
             width: 70px;
             font-size: 50px;
             color: white;
-            line-height: 0;
+            /* line-height: 0; */
             border-radius: 100px;
             text-align: center;
             cursor: pointer;
             box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.3);
         }
-        */
     </style>
 </head>
 
@@ -58,7 +57,7 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon1">@</span>
                                 <input type="text" class="form-control" id="username-input" placeholder="Username"
-                                    aria-label="Username" aria-describedby="basic-addon1" value="Mohannad1">
+                                    aria-label="Username" aria-describedby="basic-addon1" value="m0ohannad">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -125,44 +124,48 @@
     <!--// REGISTER MODAL //-->
 
     <!-- CREATE POSTS MODAL -->
-    <!-- <div class="modal fade" id="login-modal" tabindex="-1" aria-labelledby="login-modalLabel" aria-hidden="true">
+    <div class="modal fade" id="create-post-modal" tabindex="-1" aria-labelledby="create-post-modal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="login-modalLabel">Login</h1>
+                    <h1 class="modal-title fs-5" id="create-post-modalLabel">Create A New Post</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">username:</label>
+                            <label for="recipient-name" class="col-form-label">Title:</label>
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="basic-addon1">@</span>
-                                <input type="text" class="form-control" id="username-input" placeholder="Username"
-                                    aria-label="Username" aria-describedby="basic-addon1" value="Mohannad1">
+                                <input type="text" class="form-control" id="post-title-input" placeholder="Post Title"
+                                    aria-label="Username" aria-describedby="basic-addon1" value="">
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Password:</label>
-                            <input type="password" class="form-control" id="Password-input" value="123456">
+                            <textarea class="form-control" id="post-body-input" rows="3"
+                                placeholder="Post Body"></textarea>
+                        </div>
+                        <div class="mb-3"></div>
+                        <label for="recipient-name" class="col-form-label">Image:</label>
+                        <div class="input-group mb-3">
+                            <input type="file" class="form-control" id="post-image-input">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="loginBtnClicked()">Login</button>
+                    <button type="button" class="btn btn-primary" onclick="CreateNewPostClicked()">Create</button>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
     <!--// CREATE POSTS MODAL //-->
 
     <!--//===== MODALS =====//-->
 
     <!-- ADD POST BUTTON -->
-    <!-- <div class="bg-primary" id="add-btn" data-bs-toggle="modal" data-bs-target="#create-post-modal">
+    <div class="bg-primary" id="add-btn" data-bs-toggle="modal" data-bs-target="#create-post-modal">
         +
-    </div> -->
+    </div>
     <!--// ADD POST BUTTON //-->
 
     <!-- ====== ALERT ====== -->
@@ -284,40 +287,42 @@
 
 <script>
 
-    setupUI()
-
     const baseUrl = "https://tarmeezacademy.com/api/v1";
-    axios.get(`${baseUrl}/posts?limit=2`)
-        .then((response) => {
-            const posts = response.data.data;
-            // console.log("posts is:");
-            // console.log(posts);
+    setupUI()
+    getPosts()
 
-            // document.getElementById("posts").innerHTML = "";
+    function getPosts() {
+        axios.get(`${baseUrl}/posts?limit=5`)
+            .then((response) => {
+                const posts = response.data.data;
+                // console.log("posts is:");
+                // console.log(posts);
 
-            for (post of posts) {
+                document.getElementById("posts").innerHTML = "";
 
-                const author = post.author;
+                for (post of posts) {
 
-                let tagsContent = `
+                    const author = post.author;
+
+                    let tagsContent = `
                 <button class="btn btn-sm rounded-5" style="background-color: gray; cursor: auto;">
                     Doesn't have tags
                 </button>`;
 
-                // post.tags = ["tag1", "tag2", "tag3"];
+                    // post.tags = ["tag1", "tag2", "tag3"];
 
-                if (post.tags && post.tags.length > 0) {
-                    tagsContent = "";
-                    post.tags.forEach(tag => {
-                        tagsContent += `
+                    if (post.tags && post.tags.length > 0) {
+                        tagsContent = "";
+                        post.tags.forEach(tag => {
+                            tagsContent += `
                 <button class="btn btn-sm rounded-5" style="background-color: gray; color: white">
                     ${tag}
                 </button>
                 `;
-                    });
-                }
+                        });
+                    }
 
-                let content = `
+                    let content = `
                 <!-- POST -->
                 <div class="d-flex justify-content-center mt-5">
                     <div class="col-9">
@@ -365,11 +370,11 @@
                 <!--// POST //-->
                 `;
 
-                document.getElementById("posts").innerHTML += content;
+                    document.getElementById("posts").innerHTML += content;
 
-            }
-        })
-
+                }
+            })
+    }
     function loginBtnClicked() {
         // alert("Login button clicked");
         const username = document.getElementById("username-input").value;
@@ -478,9 +483,10 @@
 
         // todo: hide alert after 3 seconds
         setTimeout(() => {
-            const alert = document.getElementById("success-alert");
-            const alertInstance = bootstrap.Alert.getInstance(alert);
-            alertInstance.hide();
+            // const alert = document.getElementById("success-alert");
+            // const alertInstance = bootstrap.Alert.getInstance(alert);
+            // alertInstance.hide();
+
             // const alert = bootstrap.Alert.getOrCreateInstance('#success-alert')
             // alert.close()
         }, 3000)
@@ -498,14 +504,52 @@
 
         const loginDiv = document.getElementById("logged-in-div");
         const logoutDiv = document.getElementById("logout-div");
+        const addBtn = document.getElementById("add-btn");
 
         if (token == null) { // user is guest (not logged in)
             loginDiv.style.setProperty("display", "flex", "important");
             logoutDiv.style.setProperty("display", "none", "important");
+            addBtn.style.setProperty("display", "none", "important");
         } else { // user is logged in  
             loginDiv.style.setProperty("display", "none", "important");
             logoutDiv.style.setProperty("display", "flex", "important");
+            addBtn.style.setProperty("display", "block", "important");
         }
+    }
+
+    function CreateNewPostClicked() {
+        // console.log("Create new post button clicked");
+        const title = document.getElementById("post-title-input").value;
+        const body = document.getElementById("post-body-input").value;
+        const image = document.getElementById("post-image-input").files[0];
+
+        let formData = new FormData();
+        formData.append("title", title);
+        formData.append("body", body);
+        formData.append("image", image);
+
+        const url = `${baseUrl}/posts`;
+        const token = localStorage.getItem("token");
+        const headers = {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${token}`
+        }
+
+        axios.post(url, formData, {
+            headers: headers
+        })
+            .then((response) => {
+                // console.log(response.data);
+                const postModal = document.getElementById("create-post-modal");
+                const postModalInstance = bootstrap.Modal.getInstance(postModal);
+                postModalInstance.hide();
+                showAlert("New Post Has Been Created Successfully");
+                getPosts()
+            }).catch((error) => {
+                // console.log(error.response.data.message);
+                const errMessage = error.response.data.message
+                showAlert(errMessage, 'danger');
+            })
     }
 </script>
 
