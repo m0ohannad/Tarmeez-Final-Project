@@ -87,9 +87,7 @@
                     <form>
                         <div class="mb-3">
                             <label for="recipient-name" class="col-form-label">Profile image:</label>
-                            <div class="input-group mb-3">
-                                <input type="file" class="form-control" id="inputGroupFile02">
-                            </div>
+                            <input type="file" class="form-control" id="register-image-input">
                         </div>
                         <div class="mb-3">
                             <label for="recipient-name" class="col-form-label">Name:</label>
@@ -205,7 +203,17 @@
                             <!--// FROM NON-LOGGED IN User //-->
 
                             <!-- LOGGED IN USER -->
-                            <div class="d-flex w-100 justify-content-end" id="logout-div">
+
+                            <div class="d-flex w-100 justify-content-end align-items-center" id="logout-div">
+                                <img id="nav-user-image" src="./pofile-pics/picture-profile-icon-male.jpg"
+                                    alt="Profile image user" class="img-thumbnail rounded-circle border-1"
+                                    style="height: 40px; width: 40px;"
+                                    onerror="this.onerror=null; this.src='./pofile-pics/picture-profile-icon-male.jpg';">
+
+                                <b class="m-2" id="nav-username">
+                                    @m0ohannad
+                                </b>
+
                                 <button onclick="logout()" id="logout-btn" type="button"
                                     class="btn btn-outline-danger">Logout</button>
                             </div>
@@ -288,17 +296,48 @@
 <script>
 
     const baseUrl = "https://tarmeezacademy.com/api/v1";
-    setupUI()
-    getPosts()
+    let currentPage = 0;
+    let lastpage = 1;
 
-    function getPosts() {
-        axios.get(`${baseUrl}/posts?limit=5`)
+    // =========== IFIINITE SCROLL ===========//
+
+    window.addEventListener("scroll", function () {
+        const threshold = 100; // يمكنك تعديل هذه القيمة حسب الحاجة
+        // const endOfPage = window.scrollY + window.innerHeight + 1 >= document.documentElement.scrollHeight - threshold;
+        const endOfPage = window.scrollY + window.innerHeight + 1 >= document.documentElement.scrollHeight;
+
+        if (endOfPage && currentPage < lastpage) {
+            console.log("End of page reached");
+            getPosts(++currentPage);
+        }
+
+
+        // if(window.scrollY + window.innerHeight +1 >= document.documentElement.scrollHeight)
+
+        console.log("endOfPage: " + endOfPage);
+    });
+
+    // ========= END IFIINITE SCROLL =========//
+
+    setupUI()
+    // document.getElementById("posts").innerHTML = "";
+    getPosts(++currentPage, true);
+
+    function getPosts(page = 1, reload = false) {
+
+
+        if (reload) {
+            document.getElementById("posts").innerHTML = "";
+        }
+        // axios.get(`${baseUrl}/posts?limit=5&page=3621`)
+        axios.get(`${baseUrl}/posts?limit=5&page=${page}`)
             .then((response) => {
+                lastpage = response.data.meta.last_page;
+
                 const posts = response.data.data;
                 // console.log("posts is:");
                 // console.log(posts);
 
-                document.getElementById("posts").innerHTML = "";
 
                 for (post of posts) {
 
@@ -314,9 +353,10 @@
                     if (post.tags && post.tags.length > 0) {
                         tagsContent = "";
                         post.tags.forEach(tag => {
+                            // console.log(tag.name);
                             tagsContent += `
                 <button class="btn btn-sm rounded-5" style="background-color: gray; color: white">
-                    ${tag}
+                    ${tag.name}
                 </button>
                 `;
                         });
@@ -331,7 +371,7 @@
                                 <img src="${author.profile_image ? author.profile_image : './pofile-pics/picture-profile-icon-male.jpg'}" alt="picture of ${author.username} profile"
                                     class="img-thumbnail rounded-circle border-1" style="height: 40px; width: 40px;"
                                     onerror="this.onerror=null; this.src='./pofile-pics/picture-profile-icon-male.jpg';">
-                                <b>@${author.username}</b>
+                                <b">@${author.username}</b>
                             </div>
                             <div class="card-body">
                                 <img src="${post.image ? post.image : './placeholders/Green-Tree.jpeg'}" alt="Image of post ${post.title ? 'titled \'' + post.title + '\'' : ""}" class="w-100">
@@ -417,23 +457,32 @@
         const name = document.getElementById("register-name-input").value;
         const username = document.getElementById("register-username-input").value;
         const password = document.getElementById("register-password-input").value;
+        const image = document.getElementById("register-image-input").files[0];
 
         console.log("name: " + name);
         console.log("username: " + username);
         console.log("password: " + password);
+        console.log("image: " + image);
 
-        const params = {
-            "username": username,
-            "password": password,
-            "name": name
+        let formData = new FormData();
+        formData.append("name", name);
+        formData.append("username", username);
+        formData.append("password", password);
+        formData.append("image", image);
+
+        const token = localStorage.getItem("token");
+        const headers = {
+            "Content-Type": "multipart/form-data",
         }
 
         const url = `${baseUrl}/register`;
 
-        axios.post(url, params)
+        axios.post(url, formData, {
+            headers: headers
+        })
             .then((response) => {
-                // const data = response.data;
-                // console.log(response.data.token);
+                const data = response.data;
+                console.log(response.data);
 
                 localStorage.setItem("token", response.data.token);
                 localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -505,6 +554,8 @@
         const loginDiv = document.getElementById("logged-in-div");
         const logoutDiv = document.getElementById("logout-div");
         const addBtn = document.getElementById("add-btn");
+        const navUsername = document.getElementById("nav-username");
+        const navUserImage = document.getElementById("nav-user-image");
 
         if (token == null) { // user is guest (not logged in)
             loginDiv.style.setProperty("display", "flex", "important");
@@ -514,7 +565,18 @@
             loginDiv.style.setProperty("display", "none", "important");
             logoutDiv.style.setProperty("display", "flex", "important");
             addBtn.style.setProperty("display", "block", "important");
+            navUsername.innerText = "@" + getCurrentUser().username;
+            navUserImage.src = getCurrentUser().profile_image ?? './pofile-pics/picture-profile';
         }
+    }
+
+    function getCurrentUser() {
+        let user = null;
+        const storageUser = localStorage.getItem("user");
+        if (storageUser != null) {
+            user = JSON.parse(storageUser);
+        }
+        return user;
     }
 
     function CreateNewPostClicked() {
@@ -544,7 +606,7 @@
                 const postModalInstance = bootstrap.Modal.getInstance(postModal);
                 postModalInstance.hide();
                 showAlert("New Post Has Been Created Successfully");
-                getPosts()
+                getPosts(currentPage, true);
             }).catch((error) => {
                 // console.log(error.response.data.message);
                 const errMessage = error.response.data.message
