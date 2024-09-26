@@ -479,17 +479,50 @@
                                     </span>
                                 </span>
                             </div>
-                        </div>
+                            </div>
+
+                        <!-- ADD COMMENT -->
+                        <div class="input-group mb-3" id="add-comment-div">
+                            <input type="text" id="comment-input" placeholder="Add your comment here..." class="form-control">
+                            <button class="btn btn-outline-primary" type="button" onclick="createCommentCLicked()">Send</button>
+                        </div>    
+                        <!--// ADD COMMENT //-->
+
                         <!-- COMMENTS -->
                         <div id="comments">
                             ${commentsContent}
                         </div>
                         <!--// COMMENTS //-->
+
                     </div>
                 `;
 
                 document.getElementById('post').innerHTML = postContent;
             })
+    }
+
+    function createCommentCLicked() {
+        let commentBody = document.getElementById('comment-input').value;
+        // console.log(commentBody);
+        let params = {
+            body: commentBody,
+        }
+        let token = localStorage.getItem('token');
+        let url = `${baseUrl}/posts/${postId}/comments`;
+
+        axios.post(url, params, {
+            headers: {
+                "authorization": `Bearer ${token}`
+            }
+        }).then((response) => {
+            console.log(response.data);
+            showAlert("The comment has been created successfully", 'success');
+            getPost();  
+        }).catch((error) => {
+            console.log(error.response.data.message);
+            const errorMessage = error.response.data.message;
+            showAlert(errorMessage, 'danger');
+        });
     }
 </script>
 
