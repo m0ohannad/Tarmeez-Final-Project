@@ -137,7 +137,7 @@
                                 <input type="text" class="form-control" id="post-title-input" placeholder="Post Title"
                                     aria-label="Username" aria-describedby="basic-addon1" value="">
 
-                                    <input type="hidden" id="post-id-input" value="false">
+                                <input type="hidden" id="post-id-input" value="false">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -153,12 +153,38 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="post-modal-submit-btn" type="button" class="btn btn-primary" onclick="CreateNewPostClicked()">Create</button>
+                    <button id="post-modal-submit-btn" type="button" class="btn btn-primary"
+                        onclick="CreateNewPostClicked()">Create</button>
                 </div>
             </div>
         </div>
     </div>
     <!--// CREATE POSTS MODAL //-->
+
+    <!-- DELETE POSTS MODAL -->
+    <div class="modal fade" id="delete-post-modal" tabindex="-1" aria-labelledby="create-post-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="post-modal-title">
+                        Are you sure you want to delete the post?
+                        <span class="delete-post-title"></span>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                    <input type="hidden" id="delete-post-id-input" value="">
+
+                    <button id="post-modal-submit-btn" type="button" class="btn btn-danger"
+                        onclick="confirmPostDelete()">Yes Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--// DELETE POSTS MODAL //-->
 
     <!--//===== MODALS =====//-->
 

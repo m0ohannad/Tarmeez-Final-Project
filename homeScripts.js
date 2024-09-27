@@ -55,6 +55,9 @@ function getPosts(page = 1, reload = false) {
                 let user = getCurrentUser();
                 let isMyPost = user != null && user.id == author.id;
                 let editBtn = isMyPost ? `
+                    <button class="btn btn-danger ms-2" style="float: right;" onclick="deletePostBtnClicked('${encodeURIComponent(JSON.stringify(post))}')">
+                    delete
+                    </button>
                     <button class="btn btn-secondary" style="float: right;" onclick="editPostBtnClicked('${encodeURIComponent(JSON.stringify(post))}')">
                     edit
                     </button>
@@ -199,6 +202,48 @@ function editPostBtnClicked(postObject) {
     document.getElementById("post-body-input").value = post.body;
     let posModal = new bootstrap.Modal(document.getElementById("create-post-modal"), {});
     posModal.toggle();
+}
+
+function deletePostBtnClicked(postObject) {
+    let post = JSON.parse(decodeURIComponent(postObject));
+    console.log(post);
+
+    document.getElementById("delete-post-id-input").value = post.id;
+
+    let posModal = new bootstrap.Modal(document.getElementById("delete-post-modal"), {});
+    posModal.toggle();
+}
+
+function confirmPostDelete() {
+    const token = localStorage.getItem("token");
+    const postID = document.getElementById("delete-post-id-input").value;
+    const url = `${baseUrl}/posts/${postID}`;
+    const headers = {
+        "Content-Type": "multipart/form-data",
+        "Authorization": `Bearer ${token}`
+    }
+    console.log(url);
+    axios.delete(url, {
+        headers: headers
+    })
+        .then((response) => {
+            console.log(response.data);
+            // const data = response.data;
+            // console.log(response.data.token);
+
+            const modal = document.getElementById("delete-post-modal");
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();
+
+            showAlert("Deleted Post successfully");
+
+            getPosts(currentPage, true);
+
+        }).catch((error) => {
+            console.log(error.response);
+            const errMessage = error.response.data.message
+            showAlert(errMessage, 'danger');
+        })
 }
 
 function addBtnClicked() {
