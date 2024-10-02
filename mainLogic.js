@@ -34,6 +34,9 @@ function profileClicked() {
 
 // ======== POST REQUESTS ========= //
 function CreateNewPostClicked() {
+
+    toggleLoader(true);
+
     // console.log("Create new post button clicked");
     let postID = document.getElementById("post-id-input").value;
     console.log("postID: " + postID);
@@ -81,7 +84,9 @@ function CreateNewPostClicked() {
             // console.log(error.response.data.message);
             const errMessage = error.response.data.message
             showAlert(errMessage, 'danger');
-        })
+        }).finally(() => {
+            toggleLoader(false);
+        });
 }
 
 function editPostBtnClicked(postObject) {
@@ -171,8 +176,11 @@ function loginBtnClicked() {
 
     const url = `${baseUrl}/login`;
 
+    toggleLoader(true);
     axios.post(url, params)
         .then((response) => {
+
+            // toggleLoader(false);
             // const data = response.data;
             // console.log(response.data.token);
 
@@ -188,7 +196,14 @@ function loginBtnClicked() {
             showAlert("Logged in successfully");
 
             setupUI();
-        })
+        }).catch((error) => {
+            // toggleLoader(false);
+            const errMessage = error.response.data.message
+            // console.log(errMessage);
+            showAlert(errMessage, 'danger');
+        }).finally(() => {
+            toggleLoader(false);
+        });
 
 
 }
@@ -218,6 +233,8 @@ function registerBtnClicked() {
 
     const url = `${baseUrl}/register`;
 
+    toggleLoader(true);
+
     axios.post(url, formData, {
         headers: headers
     })
@@ -241,6 +258,8 @@ function registerBtnClicked() {
             const errMessage = error.response.data.message
             console.log(errMessage);
             showAlert(errMessage, 'danger');
+        }).finally(() => {
+            toggleLoader(false);
         })
 }
 
@@ -296,3 +315,9 @@ function getCurrentUser() {
     return user;
 }
 // ##======== AUTH FUNCTIONS =========## //
+
+// ======== LOADER FUNCTION ========= //
+function toggleLoader(show = true) {
+    document.getElementById("loader").style.visibility = show ? "visible" : "hidden";
+}
+// ##======== LOADER FUNCTION =========## //

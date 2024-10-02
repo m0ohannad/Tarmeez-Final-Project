@@ -28,13 +28,19 @@ getPosts(++currentPage, true);
 
 function getPosts(page = 1, reload = false) {
 
+    toggleLoader(true);
 
     if (reload) {
         document.getElementById("posts").innerHTML = "";
     }
+
     // axios.get(`${baseUrl}/posts?limit=5&page=3621`)
     axios.get(`${baseUrl}/posts?limit=5&page=${page}`)
         .then((response) => {
+            // setTimeout(() => {
+            //     toggleLoader(false);
+            // }, 1000);
+            toggleLoader(false);
             lastpage = response.data.meta.last_page;
 
             const posts = response.data.data;
